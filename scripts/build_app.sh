@@ -6,7 +6,7 @@ cd "$(dirname "$0")/.."
 
 APP_NAME="Uncork"
 BUNDLE_ID="com.uncork.app"
-VERSION="0.1.0"
+VERSION="${1:-0.1.0}"   # 可用参数覆盖：./scripts/build_app.sh 0.2.0
 
 echo "==> 1/5 编译（优先通用二进制，无 Xcode 时回退 arm64）"
 if swift build -c release --arch arm64 --arch x86_64 2>/dev/null; then

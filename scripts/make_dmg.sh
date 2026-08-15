@@ -4,7 +4,9 @@
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
-./scripts/build_app.sh
+VERSION="${1:-0.1.0}"
+
+./scripts/build_app.sh "$VERSION"
 
 if ! command -v create-dmg >/dev/null 2>&1; then
   echo "==> 安装 create-dmg（Homebrew）…"
@@ -16,7 +18,7 @@ if [ ! -f Resources/dmg-background.png ]; then
   swift scripts/render_placeholder.swift dmg-bg
 fi
 
-rm -f dist/Uncork-0.1.0.dmg
+rm -f "dist/Uncork-$VERSION.dmg"
 create-dmg \
   --volname "Uncork" \
   --volicon build/AppIcon.icns \
@@ -25,6 +27,6 @@ create-dmg \
   --app-drop-link 420 180 \
   --background Resources/dmg-background.png \
   --hide-extension "Uncork.app" \
-  dist/Uncork-0.1.0.dmg dist/
+  "dist/Uncork-$VERSION.dmg" dist/
 
-echo "==> 完成：dist/Uncork-0.1.0.dmg"
+echo "==> 完成：dist/Uncork-$VERSION.dmg"
