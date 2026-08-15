@@ -61,6 +61,8 @@ wine 自带的 D3D11 转换层在 macOS 上不支持这些游戏需要的特性�
 DXMT 来源：Whisky Libraries（MIT），随引擎安装包下载。
 已知可玩：InnocentAssault（UE4，实测运行正常）。
 
+**哪些程序能跑/不能跑**：见 [COMPATIBILITY.md](COMPATIBILITY.md)。
+
 ### 关于其他电脑
 
 - **Apple Silicon（M 系列）Mac**：直接可用。首次启动自动下载 457MB 引擎，装 DXMT 后即可跑 3D 游戏
