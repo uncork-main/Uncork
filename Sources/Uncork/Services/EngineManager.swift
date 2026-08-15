@@ -130,9 +130,62 @@ final class EngineManager: ObservableObject {
         await install()
     }
 
+    /// Apple Silicon 上 x86_64 引擎需要 Rosetta 2（首次会由 macOS 提示安装，
+    /// 若用户从未装过则引擎无法运行——提前检测并给出明确指引）
+    static func isRosettaAvailable() async -> Bool {
+        do {
+            _ = try await ProcessRunner.run(
+                URL(fileURLWithPath: "/usr/bin/arch"),
+                args: ["-x86_64", "/usr/bin/true"],
+                timeout: 20
+            )
+            return true
+        } catch {
+            return false
+        }
+    }
+
+    /// 尝试自动安装 Rosetta 2（会弹出系统授权框）
+    func installRosetta() async {
+        LogSink.shared.append("尝试安装 Rosetta 2…")
+        do {
+            let result = try await ProcessRunner.run(
+                URL(fileURLWithPath: "/usr/sbin/softwareupdate"),
+                args: ["--install-rosetta", "--agree-to-license"],
+                timeout: 600
+            )
+            LogSink.shared.append("Rosetta 安装完成：\(result.stdout.trimmingCharacters(in: .whitespacesAndNewlines))")
+            state = .notInstalled
+        } catch {
+            LogSink.shared.append("Rosetta 安装失败：\(error.localizedDescription)")
+        }
+    }
+
     private func performInstall() async {
         let fm = FileManager.default
         var failures: [String] = []
+
+        // 前置检查 1：磁盘空间（457MB 下载 + 1.3GB 解压 + 余量 ≈ 3GB）
+        if let values = try? Paths.supportDir.resourceValues(forKeys: [.volumeAvailableCapacityForImportantUsageKey]),
+           let free = values.volumeAvailableCapacityForImportantUsage,
+           free < 3_000_000_000 {
+            state = .error(
+                message: "磁盘空间不足：剩余 \(free / 1_000_000_000)GB，安装引擎至少需要 3GB 可用空间",
+                retryable: true
+            )
+            return
+        }
+
+        // 前置检查 2：Apple Silicon 上需要 Rosetta 2 运行 x86_64 引擎
+        #if arch(arm64)
+        if !(await Self.isRosettaAvailable()) {
+            state = .error(
+                message: "未检测到 Rosetta 2（运行 Wine 引擎需要）。\n可点击「自动安装 Rosetta」，或在终端运行：\nsoftwareupdate --install-rosetta --agree-to-license",
+                retryable: true
+            )
+            return
+        }
+        #endif
 
         for source in sources {
             do {

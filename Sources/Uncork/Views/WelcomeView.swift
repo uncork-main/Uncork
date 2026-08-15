@@ -88,10 +88,17 @@ struct WelcomeView: View {
                     .foregroundStyle(.red)
                     .multilineTextAlignment(.center)
                 if retryable {
-                    Button("重试") {
-                        Task { await appState.engine.install() }
+                    HStack(spacing: 12) {
+                        if message.contains("Rosetta") {
+                            Button("自动安装 Rosetta") {
+                                Task { await appState.engine.installRosetta() }
+                            }
+                        }
+                        Button("重试") {
+                            Task { await appState.engine.install() }
+                        }
+                        .buttonStyle(.borderedProminent)
                     }
-                    .buttonStyle(.borderedProminent)
                 }
             }
         }
