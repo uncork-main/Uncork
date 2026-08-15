@@ -14,10 +14,22 @@ final class WineRunner {
         self.engine = engine
     }
 
+    /// 瓶内是否装有真正的 .NET Framework（如 PCL2 等 .NET 应用需要）
+    /// 检测标准 .NET 4.x 运行时文件（wine 内置 mono 不会生成此目录）
+    static func hasDotNetRuntime(in bottle: Bottle) -> Bool {
+        FileManager.default.fileExists(
+            atPath: bottle.prefixURL
+                .appendingPathComponent("drive_c/windows/Microsoft.NET/Framework/v4.0.30319/clr.dll").path
+        )
+    }
+
     func environment(for bottle: Bottle, creatingPrefix: Bool = false) -> [String: String] {
         let engineBin = engine.wineBinaryURL.deletingLastPathComponent().path
-        // 禁用 mono/gecko；装了 DXVK 时用 native d3d11/d3d10core（游戏必需）
+        // 禁用 mono/gecko；装了真实 .NET 的瓶不禁用 mscoree（.NET 程序需要）
         var overrides = "mscoree,mshtml="
+        if Self.hasDotNetRuntime(in: bottle) {
+            overrides = "mshtml="
+        }
         var env: [String: String] = [
             "PATH": engineBin + ":" + (ProcessInfo.processInfo.environment["PATH"] ?? "/usr/bin:/bin"),
             "WINEPREFIX": bottle.prefixURL.path,
