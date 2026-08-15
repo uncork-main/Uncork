@@ -6,7 +6,7 @@
 
 ## 安全与无毒声明
 
-- 本项目**不含任何恶意代码**，全部源代码公开于 <https://github.com/KevinChen487/Uncork>，任何人都可逐行审查、自行构建
+- 本项目**不含任何恶意代码**，全部源代码公开于 <https://github.com/Uncork-main/Uncork>，任何人都可逐行审查、自行构建
 - 软件**不收集任何个人信息**：无统计埋点、无遥测、无广告 SDK；唯一联网行为是首次安装时从官方 GitHub 源下载开源 Wine 引擎
 - macOS 首次打开可能提示「无法验证开发者」：因为本项目使用自签名证书，未购买 Apple 开发者公证服务（99 美元/年）。**这是签名状态的提示，不是安全警告**，右键 → 打开即可
 
@@ -32,7 +32,7 @@
 
 ## 如何自行验证（不信任本说明时）
 
-1. 下载源码自行构建：`git clone https://github.com/KevinChen487/Uncork.git && ./scripts/build_app.sh`
+1. 下载源码自行构建：`git clone https://github.com/Uncork-main/Uncork.git && ./scripts/build_app.sh`
 2. 校验安装包 SHA-256（发布页附校验值）
 3. 用任意杀毒软件（如 ClamAV）扫描 DMG
 4. 在「访达 → 隐私与安全」中检查应用的网络行为：本应用仅访问 GitHub 下载引擎

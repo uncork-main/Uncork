@@ -20,7 +20,7 @@ struct AboutView: View {
 
             VStack(spacing: 8) {
                 Link("项目主页（GitHub）",
-                     destination: URL(string: "https://github.com/KevinChen487/Uncork")!)
+                     destination: URL(string: "https://github.com/Uncork-main/Uncork")!)
                 Link("Wine 引擎与 DXMT（Whisky 发布页）",
                      destination: URL(string: "https://github.com/frankea/Whisky/releases")!)
                 Link("CrossOver 开源源码（CodeWeavers）",
