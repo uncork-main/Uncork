@@ -8,6 +8,12 @@ cd "$(dirname "$0")/.."
 VERSION="${1:?用法: ./scripts/release.sh <版本号> [更新说明]}"
 NOTES="${2:-}"
 
+# 标签统一带 v 前缀（v0.1.0、v0.1.1…）
+TAG="$VERSION"
+if [[ "$TAG" != v* ]]; then
+  TAG="v$TAG"
+fi
+
 echo "==> 1/4 构建并打包 DMG"
 ./scripts/make_dmg.sh "$VERSION"
 
@@ -54,7 +60,7 @@ SHA-256: $SHA
 问题与建议请提 [Issue](https://github.com/uncork-main/Uncork/issues)。
 EOF
 
-gh release create "$VERSION" "$DMG" --title "开瓶器 Uncork $VERSION" --notes-file /tmp/uncork-release-notes.md
+gh release create "$TAG" "$DMG" --title "开瓶器 Uncork $VERSION" --notes-file /tmp/uncork-release-notes.md
 
 echo ""
-echo "✅ 发布完成：https://github.com/uncork-main/Uncork/releases/tag/$VERSION"
+echo "✅ 发布完成：https://github.com/uncork-main/Uncork/releases/tag/$TAG"
