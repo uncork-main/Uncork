@@ -1,5 +1,6 @@
 # 开瓶器 Uncork
 > 以下内容均由 AI 生成，请注意辨别，本人不负任何责任。
+
 类 CrossOver 的 macOS 应用：通过 Wine 兼容层在 Mac 上运行 Windows 程序。SwiftUI 原生界面（中文），Wine 引擎在首次启动时自动下载（约 190 MB）。
 
 ## 功能
