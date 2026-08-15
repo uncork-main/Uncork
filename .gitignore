@@ -1,0 +1,6 @@
+.build/
+build/
+dist/
+*.dmg
+.DS_Store
+build/signing/
